@@ -11,8 +11,9 @@ def getmodels():
     for name in modelnames:
         if os.path.isfile(MODELPATH+name+"/ok.txt"):
             fp = open(MODELPATH+name+"/setting.json")
-            pack[name] = json.load(fp, encoding='utf-8')
-    return str(pack)
+            setm = json.load(fp, encoding='utf-8')
+            pack[name] = setm
+    return pack
 
 def addmodel(src, trainresult):
     path = MODELPATH+uuid.uuid1().get_hex()
@@ -23,6 +24,12 @@ def addmodel(src, trainresult):
     pf = open(path+"/setting.json", "w")
     json.dump(trainresult, pf, ensure_ascii=False)
     pf = open(path+"/ok.txt", "w")
+
+def deletemodel(modelname):
+    try:
+        shutil.rmtree(MODELPATH+modelname)
+    except:
+        raise Exception("no model named "+ modelname)
 
 if __name__=="__main__":
     print getmodels()

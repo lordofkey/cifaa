@@ -9,3 +9,5 @@ curl http://127.0.0.1:5000/getAllPicModelInfo
 curl -d"PicFilePath=asdf" http://127.0.0.1:5000/recognizePic
 
 curl -d"modelname=79609ace10ff11e785a28cbebe005dd7" http://127.0.0.1:5000/updatePicModel
+
+curl -d"modelname=jl" http://127.0.0.1:5000/deletePicModel

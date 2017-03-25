@@ -1,18 +1,20 @@
-#coding: utf-8
+# coding: utf-8
+
 from flask import Flask
 from flask import request
 import trainmodel
 import json
 import modelmanage
 import predict
-app = Flask(__name__)
 
+app = Flask(__name__)
 
 pre = predict.predictmedel()
 tmodel = trainmodel.trainmodel(2)
 
+
 def checkpar(batchsize, epochnum, classes):
-    if(batchsize <= 2):
+    if batchsize <= 2:
         raise Exception("assert： batchsize>2")
     if batchsize >= 30:
         raise Exception("assert： batchsize<30")
@@ -21,17 +23,6 @@ def checkpar(batchsize, epochnum, classes):
     if len(classes) < 2:
         raise Exception("assert: 至少一个类别")
 
-def getstatue():
-    pass
-
-def deletemodel(modelname):
-    pass
-
-def updatemodel(modelname):
-    pass
-
-def recog(filepath):
-    pass
 
 @app.route('/trainPicModel', methods=["POST"])
 def begin_train():
@@ -50,6 +41,7 @@ def begin_train():
         result["ResultMessage"] = e.message
     return json.dumps(result, ensure_ascii=False)
 
+
 @app.route('/stopPicModelTrain', methods=["POST", "GET"])
 def stoptrain():
     result = {}
@@ -62,13 +54,15 @@ def stoptrain():
         result["ResultMessage"] = e.message
     return json.dumps(result, ensure_ascii=False)
 
+
 @app.route('/queryPicSystemStatus', methods=["POST"])
 def querystatus():
     result = {}
     result["ResultCode"] = "success"
     result["ResultMessage"] = "操作成功"
-    statue = getstatue()
+#    statue = getstatue()
     return json.dumps(result, ensure_ascii=False)
+
 
 @app.route('/getAllPicModelInfo', methods=["GET", "POST"])
 def getAllPicModelInfo():
@@ -82,7 +76,8 @@ def getAllPicModelInfo():
         result["ResultCode"] = "failed"
         result["ResultMessage"] = e.message
     print result
-    return json.dumps(result, ensure_ascii=False)
+    return json.dumps(result, sort_keys=True, indent=2, ensure_ascii=False)
+
 
 @app.route('/deletePicModel', methods=["POST"])
 def deletePicModel():
@@ -91,11 +86,12 @@ def deletePicModel():
     result["ResultMessage"] = "操作成功"
     modelname = request.form["modelname"]
     try:
-        deletemodel(modelname)
+        modelmanage.deletemodel(modelname)
     except Exception as e:
         result["ResultCode"] = "failed"
         result["ResultMessage"] = e.message
     return json.dumps(result, ensure_ascii=False)
+
 
 @app.route('/updatePicModel', methods=["POST"])
 def undatePicModel():
@@ -110,6 +106,7 @@ def undatePicModel():
         result["ResultMessage"] = e.message
     return json.dumps(result, ensure_ascii=False)
 
+
 @app.route('/recognizePic', methods=["POST", "GET"])
 def recognizePic():
     result = {}
@@ -122,6 +119,7 @@ def recognizePic():
         result["ResultCode"] = "failed"
         result["ResultMessage"] = e.message
     return json.dumps(result, ensure_ascii=False)
+
 
 if __name__ == '__main__':
     app.run()

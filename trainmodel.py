@@ -168,9 +168,8 @@ class trainmodel:
                 gra.add_to_collection(name="acc", value=accur)
                 gra.add_to_collection(name="prob", value=self.keep_prob)
                 saver.save(sess, self.modeldir+"tmp", global_step=global_step)
-            etime = time.time()
-            traintime = (etime - stime)/3600
-            trainresult = {"last": str(etime), "time": time.asctime(time.localtime()), "loss": str(ll[0]), "accurency": str(ll[1])}
+            traintime = (time.time() - stime)/3600
+            trainresult = {"last": str(traintime), "time": time.asctime(time.localtime()), "loss": str(ll[0]), "accurency": str(ll[1])}
             modelmanage.addmodel(self.modeldir, trainresult)
             self.isrunning = False
             for i in range(16):

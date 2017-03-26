@@ -17,9 +17,11 @@ class trainmodel:
         self.istraining = False
         self.thread = None
 
-    def starttrain(self):
+    def starttrain(self, batchsize, iternum, cls):
         if(self.istraining):
             raise Exception("正在进行训练！")
+        self.batchsize = batchsize
+        self.iternum = iternum
         self.isrunning = True  # 是否继续工作
         self.istraining = True  # 任务占用中
         self.thread = threading.Thread(target=self.threadfunc)
@@ -152,7 +154,8 @@ class trainmodel:
             stime = time.time()
             with tf.Session() as sess:
                 sess.run(init_op)
-                for i in range(2000):
+                ll = [0, 0]
+                for i in range(self.iternum):
                     if not (self.isrunning):
                         break
                     try:
@@ -169,7 +172,7 @@ class trainmodel:
                 gra.add_to_collection(name="prob", value=self.keep_prob)
                 saver.save(sess, self.modeldir+"tmp", global_step=global_step)
             traintime = (time.time() - stime)/3600
-            trainresult = {"last": str(traintime), "time": time.asctime(time.localtime()), "loss": str(ll[0]), "accurency": str(ll[1])}
+            trainresult = {"last": traintime, "time": time.asctime(time.localtime()), "loss": float(ll[0]), "accurency": float(ll[1])}
             modelmanage.addmodel(self.modeldir, trainresult)
             self.isrunning = False
             for i in range(16):

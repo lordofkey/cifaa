@@ -7,6 +7,8 @@ import json
 import modelmanage
 import predict
 
+
+
 app = Flask(__name__)
 
 pre = predict.predictmedel()
@@ -27,54 +29,54 @@ def checkpar(batchsize, epochnum, classes):
 @app.route('/trainPicModel', methods=["POST"])
 def begin_train():
     result = {}
-    result["ResultCode"] = "success"
-    result["ResultMessage"] = "训练任务开始"
+    result[u"ResultCode"] = u"success"
+    result[u"ResultMessage"] = u"训练任务开始"
     batchsize = int(request.form['BatchSize'])
     epochnum = int(request.form['EpochNum'])
     classes = request.form['Classes']
     classj = json.loads(classes)
     try:
         checkpar(batchsize, epochnum, classj)
-        tmodel.starttrain()
+        tmodel.starttrain(batchsize, epochnum, classes)
     except Exception as e:
-        result["ResultCode"] = "failed"
-        result["ResultMessage"] = e.message
-    return json.dumps(result, ensure_ascii=False)
+        result[u"ResultCode"] = u"failed"
+        result[u"ResultMessage"] = e.message.decode("utf-8")
+    return json.dumps(result, sort_keys=True, indent=2, ensure_ascii=False)
 
 
 @app.route('/stopPicModelTrain', methods=["POST", "GET"])
 def stoptrain():
     result = {}
-    result["ResultCode"] = "success"
-    result["ResultMessage"] = "操作成功，停止训练"
+    result[u"ResultCode"] = u"success"
+    result[u"ResultMessage"] = u"操作成功，停止训练"
     try:
         tmodel.stptrain()
     except Exception as e:
-        result["ResultCode"] = "failed"
-        result["ResultMessage"] = e.message
-    return json.dumps(result, ensure_ascii=False)
+        result[u"ResultCode"] = u"failed"
+        result[u"ResultMessage"] = e.message.decode("utf-8")
+    return json.dumps(result, sort_keys=True, indent=2, ensure_ascii=False)
 
 
 @app.route('/queryPicSystemStatus', methods=["POST"])
 def querystatus():
     result = {}
-    result["ResultCode"] = "success"
-    result["ResultMessage"] = "操作成功"
+    result[u"ResultCode"] = u"success"
+    result[u"ResultMessage"] = u"操作成功"
 #    statue = getstatue()
-    return json.dumps(result, ensure_ascii=False)
+    return json.dumps(result, sort_keys=True, indent=2, ensure_ascii=False)
 
 
 @app.route('/getAllPicModelInfo', methods=["GET", "POST"])
 def getAllPicModelInfo():
     result = {}
-    result["ResultCode"] = "success"
-    result["ResultMessage"] = "操作成功"
+    result[u"ResultCode"] = u"success"
+    result[u"ResultMessage"] = u"操作成功"
     try:
         modelinfo = modelmanage.getmodels()
-        result["info"] = modelinfo
+        result[u"info"] = modelinfo
     except Exception as e:
-        result["ResultCode"] = "failed"
-        result["ResultMessage"] = e.message
+        result[u"ResultCode"] = u"failed"
+        result[u"ResultMessage"] = e.message.decode("utf-8")
     print result
     return json.dumps(result, sort_keys=True, indent=2, ensure_ascii=False)
 
@@ -82,43 +84,43 @@ def getAllPicModelInfo():
 @app.route('/deletePicModel', methods=["POST"])
 def deletePicModel():
     result = {}
-    result["ResultCode"] = "success"
-    result["ResultMessage"] = "操作成功"
+    result[u"ResultCode"] = u"success"
+    result[u"ResultMessage"] = u"操作成功"
     modelname = request.form["modelname"]
     try:
         modelmanage.deletemodel(modelname)
     except Exception as e:
-        result["ResultCode"] = "failed"
-        result["ResultMessage"] = e.message
-    return json.dumps(result, ensure_ascii=False)
+        result[u"ResultCode"] = u"failed"
+        result[u"ResultMessage"] = e.message.decode("utf-8")
+    return json.dumps(result, sort_keys=True, indent=2, ensure_ascii=False)
 
 
 @app.route('/updatePicModel', methods=["POST"])
 def undatePicModel():
     result = {}
-    result["ResultCode"] = "success"
-    result["ResultMessage"] = "操作成功"
+    result[u"ResultCode"] = u"success"
+    result[u"ResultMessage"] = u"操作成功"
     modelname = request.form["modelname"]
     try:
         pre.loadmodel(modelname)
     except Exception as e:
-        result["ResultCode"] = "failed"
-        result["ResultMessage"] = e.message
-    return json.dumps(result, ensure_ascii=False)
+        result[u"ResultCode"] = u"failed"
+        result[u"ResultMessage"] = e.message.decode("utf-8")
+    return json.dumps(result, sort_keys=True, indent=2, ensure_ascii=False)
 
 
 @app.route('/recognizePic', methods=["POST", "GET"])
 def recognizePic():
     result = {}
-    result["ResultCode"] = "success"
-    result["ResultMessage"] = "操作成功"
+    result[u"ResultCode"] = u"success"
+    result[u"ResultMessage"] = u"操作成功"
     filepath = request.form["PicFilePath"]
     try:
         result["resultinfo"] = str(pre.predict())
     except Exception as e:
-        result["ResultCode"] = "failed"
-        result["ResultMessage"] = e.message
-    return json.dumps(result, ensure_ascii=False)
+        result[u"ResultCode"] = u"failed"
+        result[u"ResultMessage"] = e.message.decode("utf-8")
+    return json.dumps(result, sort_keys=True, indent=2, ensure_ascii=False)
 
 
 if __name__ == '__main__':

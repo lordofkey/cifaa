@@ -1,3 +1,4 @@
+#coding:utf-8
 import os
 import json
 import uuid
@@ -22,8 +23,11 @@ def addmodel(src, trainresult):
     for ff in flist:
         shutil.move(src+ff, path)
     pf = open(path+"/setting.json", "w")
+    print trainresult
     json.dump(trainresult, pf, ensure_ascii=False)
+    pf.close()
     pf = open(path+"/ok.txt", "w")
+    pf.close()
 
 def deletemodel(modelname):
     try:
@@ -32,5 +36,18 @@ def deletemodel(modelname):
         raise Exception("no model named "+ modelname)
 
 if __name__=="__main__":
-    print getmodels()
-    addmodel()
+    trainresult = {"last": 334.345, "time": "sf2342", "loss": 34.591805,
+                   "accurency": 2.23}
+    addmodel("./temp", trainresult)
+
+    result = {}
+    result[u"ResultCode"] = u"success"
+    result[u"ResultMessage"] = u"操作成功"
+    try:
+        modelinfo = getmodels()
+        result[u"info"] = modelinfo
+    except Exception as e:
+        result[u"ResultCode"] = u"failed"
+        result[u"ResultMessage"] = e.message
+    print result
+    print json.dumps(result, sort_keys=True, indent=2, ensure_ascii=False)
